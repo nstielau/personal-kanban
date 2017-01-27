@@ -12,6 +12,12 @@
     <title>Personal Kanban</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
+    <!--
+    Might be handy for deeper UX
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    -->
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -22,27 +28,30 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <style>
-    body {background: lightblue;}
+    body {background: white;}
     textarea { width: 100%; }
     .work textarea {height: 250px;}
     .home textarea {height: 150px;}
     .people textarea {height: 200px;}
+    .work .cell {height: 250px;}
+    .home .cell {height: 150px;}
+    .people .cell {height: 200px;}
     .container {width: 100%;}
-    .cell {padding: 0;}
-    .navbar {margin-bottom: 3px;}
+    .cell {padding: 0px; margin: 0px;}
+    .navbar {margin-bottom: 0px;}
+    #last-saved{margin:0; font-size: 0.75em}
     </style>
 
     <script>
     function save() {
-      console.log("Saving")
+      console.log("Saving state to localStorage")
       // Check browser support
       if (typeof(Storage) !== "undefined") {
-          // Store
           var elements = document.querySelectorAll('textarea');
           Array.prototype.forEach.call(elements, function(el, i){
             localStorage.setItem(el.id, el.value);
-            //console.log(el.id + "has content: " + el.value)
           });
+          $('#last-saved').text('Last saved: ' + new Date())
       } else {
           alert("No local storage");
       }
@@ -51,16 +60,15 @@
     function load() {
       // Check browser support
       if (typeof(Storage) !== "undefined") {
-          // Store
           var elements = document.querySelectorAll('textarea');
           Array.prototype.forEach.call(elements, function(el, i){
-            //console.log(el.id + "Should load content: " + localStorage.getItem(el.id))
             el.value = localStorage.getItem(el.id);
           });
       } else {
           alert("No local storage");
       }
     }
+
     function ready(fn) {
       if (document.readyState != 'loading'){
         fn();
@@ -76,7 +84,7 @@
 
     $(window).keydown(function (e){
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 83) { /*ctrl+s or command+s*/
-          console.log("Saving from ctrl-s")
+            console.log("Trapped ctrl-s")
             save();
             e.preventDefault();
             return false;
@@ -98,6 +106,9 @@
           </button>
           <a class="navbar-brand" href="#">Personal Kanban</a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <h4 id="last-saved" class="navbar-right navbar-brand"></h4>
+        </div><!--/.navbar-collapse -->
       </div>
     </nav>
 
