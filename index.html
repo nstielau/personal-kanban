@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Personal Kanban</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <style>
+    body {background: lightblue;}
+    textarea { width: 100%; }
+    .work textarea {height: 250px;}
+    .home textarea {height: 150px;}
+    .people textarea {height: 200px;}
+    .container {width: 100%;}
+    .cell {padding: 0;}
+    .navbar {margin-bottom: 3px;}
+    </style>
+
+    <script>
+    function save() {
+      console.log("Saving")
+      // Check browser support
+      if (typeof(Storage) !== "undefined") {
+          // Store
+          var elements = document.querySelectorAll('textarea');
+          Array.prototype.forEach.call(elements, function(el, i){
+            localStorage.setItem(el.id, el.value);
+            //console.log(el.id + "has content: " + el.value)
+          });
+      } else {
+          alert("No local storage");
+      }
+    }
+
+    function load() {
+      // Check browser support
+      if (typeof(Storage) !== "undefined") {
+          // Store
+          var elements = document.querySelectorAll('textarea');
+          Array.prototype.forEach.call(elements, function(el, i){
+            //console.log(el.id + "Should load content: " + localStorage.getItem(el.id))
+            el.value = localStorage.getItem(el.id);
+          });
+      } else {
+          alert("No local storage");
+      }
+    }
+    function ready(fn) {
+      if (document.readyState != 'loading'){
+        fn();
+      } else {
+        document.addEventListener('DOMContentLoaded', fn);
+      }
+    }
+
+    ready(function(){
+      load();
+      setInterval(save, 10000);
+    });
+
+    $(window).keydown(function (e){
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 83) { /*ctrl+s or command+s*/
+          console.log("Saving from ctrl-s")
+            save();
+            e.preventDefault();
+            return false;
+        }
+    });
+    </script>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Personal Kanban</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="top"></div>
+
+    <div class="container">
+      <div class="row work">
+        <div class="cell col-md-4">
+          <textarea id="work_todo">WAITING TO LOAD DATA</textarea>
+        </div>
+        <div class="cell col-md-4">
+          <textarea id="work_doing">WAITING TO LOAD DATA</textarea>
+       </div>
+        <div class="cell col-md-4">
+          <textarea id="work_done">WAITING TO LOAD DATA</textarea>
+        </div>
+      </div>
+      <!-- Example row of columns -->
+      <div class="row home">
+        <div class="cell col-md-4">
+          <textarea id="home_todo">WAITING TO LOAD DATA</textarea>
+        </div>
+        <div class="cell col-md-4">
+          <textarea id="home_doing">WAITING TO LOAD DATA</textarea>
+       </div>
+        <div class="cell col-md-4">
+          <textarea id="home_done">WAITING TO LOAD DATA</textarea>
+        </div>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row people">
+        <div class="cell col-md-12">
+          <textarea id="context_people">WAITING TO LOAD DATA</textarea>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+
+  </body>
+</html>
