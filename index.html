@@ -40,6 +40,7 @@
     .cell {padding: 0px; margin: 0px;}
     .navbar {margin-bottom: 0px;}
     #last-saved{margin:0; font-size: 0.75em}
+    .cell .badge {position: absolute; right: 0; margin: 2px;}
     </style>
 
     <script>
@@ -77,9 +78,31 @@
       }
     }
 
+    function changeEventHandler(event) {
+      updateLineCount(event.target.parentElement)
+    }
+
+    function updateLineCount(cell) {
+      var textarea = cell.querySelectorAll('textarea')[0]
+      var badge = cell.querySelectorAll('.badge')[0]
+      var line_count = $.trim(textarea.value).split("\n").length;
+      badge.innerHTML = line_count
+    }
+
     ready(function(){
       load();
+
+      var elements = document.querySelectorAll('.cell');
+      Array.prototype.forEach.call(elements, function(cell, i){
+        updateLineCount(cell)
+      });
+
       setInterval(save, 10000);
+
+      var elements = document.querySelectorAll('textarea');
+      Array.prototype.forEach.call(elements, function(textarea, i){
+        textarea.addEventListener('input', changeEventHandler);
+      });
     });
 
     $(window).keydown(function (e){
@@ -117,24 +140,30 @@
     <div class="container">
       <div class="row work">
         <div class="cell col-md-4">
+          <span class="badge badge-info"></span>
           <textarea id="work_todo">WAITING TO LOAD DATA</textarea>
         </div>
         <div class="cell col-md-4">
+          <span class="badge badge-info"></span>
           <textarea id="work_doing">WAITING TO LOAD DATA</textarea>
        </div>
         <div class="cell col-md-4">
+          <span class="badge badge-info"></span>
           <textarea id="work_done">WAITING TO LOAD DATA</textarea>
         </div>
       </div>
       <!-- Example row of columns -->
       <div class="row home">
         <div class="cell col-md-4">
+          <span class="badge badge-info"></span>
           <textarea id="home_todo">WAITING TO LOAD DATA</textarea>
         </div>
         <div class="cell col-md-4">
+          <span class="badge badge-info"></span>
           <textarea id="home_doing">WAITING TO LOAD DATA</textarea>
        </div>
         <div class="cell col-md-4">
+          <span class="badge badge-info"></span>
           <textarea id="home_done">WAITING TO LOAD DATA</textarea>
         </div>
       </div>
@@ -142,6 +171,7 @@
       <!-- Example row of columns -->
       <div class="row people">
         <div class="cell col-md-12">
+          <span class="badge badge-info"></span>
           <textarea id="context_people">WAITING TO LOAD DATA</textarea>
         </div>
       </div>
