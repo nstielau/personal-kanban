@@ -33,8 +33,8 @@
     .editor {
       width: 100%;
       font-weight: 200;
-      font-size: 1.25em;
-      line-height: 1.25em;
+      font-size: 18px;
+      line-height: 18px;
       max-height: 250px;
     	height: 250px;
     	background-color: white;
@@ -53,7 +53,7 @@
     .container {width: 100%;}
     .cell {padding: 0px; margin: 0px;}
     .navbar {margin-bottom: 0px; font-family: monospace;}
-    #last-saved{margin:0; font-size: 0.75em}
+    #last-saved{height: 30px; }
     .cell .badge {position: absolute; right: 0; margin: 2px;}
     </style>
 
@@ -80,7 +80,8 @@
             localStorage.setItem(el.id, el.value);
           }
         });
-        $('#last-saved').text('Last saved: ' + new Date())
+        var currentColor = $('.navbar-brand')[0].style['color'];
+        $(".navbar-brand").animate({color: "#99ff99"}, 150 ).animate({color: currentColor}, 100);
       });
     }
 
@@ -141,9 +142,6 @@
       });
 
       $(window).keydown(function (e){
-        if ((e.metaKey || e.ctrlKey)) { /*ctrl+s or command+s*/
-          console.log("Trapped: " + e.keyCode)
-        }
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 83) { /*ctrl+s or command+s*/
           console.log("Trapped ctrl-s")
           save();
@@ -160,8 +158,8 @@
         hotKeys: {
           'ctrl+b meta+b': 'bold',
           'ctrl+u meta+u': 'insertunorderedlist',
-          'tab': 'indent',
-          'shift+tab': 'outdent'
+          'tab': 'insertunorderedlist',
+          'shift+tab': 'insertunorderedlist'
         }
       });
     });
