@@ -117,7 +117,9 @@
       var textarea = cell.querySelectorAll('textarea')[0]
       if (textarea) {
         var badge = cell.querySelectorAll('.badge')[0]
-        var line_count = $.trim(textarea.value).split("\n").length;
+        var line_count = $.trim(textarea.value).split("\n").filter(function(el){
+          return el != '';
+        }).length;
         badge.innerHTML = line_count
       }
     }
