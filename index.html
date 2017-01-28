@@ -159,7 +159,7 @@
         console.log('Caught actgion')
       });
 
-      $('#context_people').wysiwyg({
+      $('div.editor').wysiwyg({
         hotKeys: {
           'ctrl+b meta+b': 'bold',
           'ctrl+u meta+u': 'insertunorderedlist',
@@ -196,7 +196,7 @@
       <div class="row work">
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="work_todo" class="editor todo">WAITING TO LOAD DATA</textarea>
+          <div id="work_todo" class="editor todo">WAITING TO LOAD DATA</div>
         </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
@@ -211,7 +211,7 @@
       <div class="row home">
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="home_todo" class="editor todo">WAITING TO LOAD DATA</textarea>
+          <div id="home_todo" class="editor todo">WAITING TO LOAD DATA</div>
         </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
