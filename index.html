@@ -12,11 +12,9 @@
     <title>Personal Kanban</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-    <!--
-    Might be handy for deeper UX
+    <!-- Might be handy for deeper UX -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    -->
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -27,49 +25,81 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+    <script src="/js/bootstrap-wysiwyg.js"></script>
+    <script src="/js/jquery.hotkeys.js"></script>
+
     <style>
     body {background: white;}
-    textarea { width: 100%; }
+    .editor {
+      width: 100%;
+      font-weight: 200;
+      font-size: 1.25em;
+      line-height: 1.25em;
+      max-height: 250px;
+    	height: 250px;
+    	background-color: white;
+    	border-collapse: separate;
+    	border: 1px solid rgb(204, 204, 204);
+    	padding: 4px;
+      box-sizing: content-box;
+      overflow: scroll;
+    }
     .work textarea {height: 250px;}
     .home textarea {height: 150px;}
     .people textarea {height: 200px;}
     .work .cell {height: 250px;}
     .home .cell {height: 150px;}
-    .people .cell {height: 200px;}
+    .people .cell, .people .cell .editor {height: 200px;}
     .container {width: 100%;}
     .cell {padding: 0px; margin: 0px;}
-    .navbar {margin-bottom: 0px;}
+    .navbar {margin-bottom: 0px; font-family: monospace;}
     #last-saved{margin:0; font-size: 0.75em}
     .cell .badge {position: absolute; right: 0; margin: 2px;}
     </style>
 
     <script>
+    // helper function to gracefully handle lack of LocalStroage support
+    function withLocalStorageSupport(fn) {
+      // Check browser support
+      if (typeof(Storage) !== "undefined") {
+        fn()
+      } else {
+        alert("No local storage");
+      }
+    }
+
+    // Persist notes
     function save() {
-      console.log("Saving state to localStorage")
-      // Check browser support
-      if (typeof(Storage) !== "undefined") {
-          var elements = document.querySelectorAll('textarea');
-          Array.prototype.forEach.call(elements, function(el, i){
+      withLocalStorageSupport(function(){
+        console.log("Saving state to localStorage")
+        var elements = document.querySelectorAll('.editor');
+        Array.prototype.forEach.call(elements, function(el, i){
+          if (el.tagName == 'DIV') {
+            localStorage.setItem(el.id, el.innerHTML);
+          } else {
             localStorage.setItem(el.id, el.value);
-          });
-          $('#last-saved').text('Last saved: ' + new Date())
-      } else {
-          alert("No local storage");
-      }
+          }
+        });
+        $('#last-saved').text('Last saved: ' + new Date())
+      });
     }
 
+    // Load notes
     function load() {
-      // Check browser support
-      if (typeof(Storage) !== "undefined") {
-          var elements = document.querySelectorAll('textarea');
-          Array.prototype.forEach.call(elements, function(el, i){
+      withLocalStorageSupport(function() {
+        console.log("Loading state from localStorage");
+        var elements = document.querySelectorAll('.editor');
+        Array.prototype.forEach.call(elements, function(el, i){
+          if (el.tagName == 'DIV') {
+            el.innerHTML = localStorage.getItem(el.id);
+          } else {
             el.value = localStorage.getItem(el.id);
-          });
-      } else {
-          alert("No local storage");
-      }
+          }
+        });
+      });
     }
 
+    // Helper function for running code on page load.
     function ready(fn) {
       if (document.readyState != 'loading'){
         fn();
@@ -84,34 +114,56 @@
 
     function updateLineCount(cell) {
       var textarea = cell.querySelectorAll('textarea')[0]
-      var badge = cell.querySelectorAll('.badge')[0]
-      var line_count = $.trim(textarea.value).split("\n").length;
-      badge.innerHTML = line_count
+      if (textarea) {
+        var badge = cell.querySelectorAll('.badge')[0]
+        var line_count = $.trim(textarea.value).split("\n").length;
+        badge.innerHTML = line_count
+      }
     }
 
     ready(function(){
+      // Load notes
       load();
+
+      // Save regularly
+      setInterval(save, 10000);
+
 
       var elements = document.querySelectorAll('.cell');
       Array.prototype.forEach.call(elements, function(cell, i){
         updateLineCount(cell)
       });
 
-      setInterval(save, 10000);
-
+      // Watch for note changes so we can update counter badges
       var elements = document.querySelectorAll('textarea');
       Array.prototype.forEach.call(elements, function(textarea, i){
         textarea.addEventListener('input', changeEventHandler);
       });
-    });
 
-    $(window).keydown(function (e){
-        if ((e.metaKey || e.ctrlKey) && e.keyCode == 83) { /*ctrl+s or command+s*/
-            console.log("Trapped ctrl-s")
-            save();
-            e.preventDefault();
-            return false;
+      $(window).keydown(function (e){
+        if ((e.metaKey || e.ctrlKey)) { /*ctrl+s or command+s*/
+          console.log("Trapped: " + e.keyCode)
         }
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 83) { /*ctrl+s or command+s*/
+          console.log("Trapped ctrl-s")
+          save();
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      $(document).on('keydown', null, 'ctrl+]', function(e) {
+        console.log('Caught actgion')
+      });
+
+      $('#context_people').wysiwyg({
+        hotKeys: {
+          'ctrl+b meta+b': 'bold',
+          'ctrl+u meta+u': 'insertunorderedlist',
+          'tab': 'indent',
+          'shift+tab': 'outdent'
+        }
+      });
     });
     </script>
   </head>
@@ -141,30 +193,30 @@
       <div class="row work">
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="work_todo">WAITING TO LOAD DATA</textarea>
+          <textarea id="work_todo" class="editor">WAITING TO LOAD DATA</textarea>
         </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="work_doing">WAITING TO LOAD DATA</textarea>
+          <textarea id="work_doing" class="editor">WAITING TO LOAD DATA</textarea>
        </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="work_done">WAITING TO LOAD DATA</textarea>
+          <textarea id="work_done" class="editor">WAITING TO LOAD DATA</textarea>
         </div>
       </div>
       <!-- Example row of columns -->
       <div class="row home">
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="home_todo">WAITING TO LOAD DATA</textarea>
+          <textarea id="home_todo" class="editor">WAITING TO LOAD DATA</textarea>
         </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="home_doing">WAITING TO LOAD DATA</textarea>
+          <textarea id="home_doing" class="editor">WAITING TO LOAD DATA</textarea>
        </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="home_done">WAITING TO LOAD DATA</textarea>
+          <textarea id="home_done" class="editor">WAITING TO LOAD DATA</textarea>
         </div>
       </div>
 
@@ -172,7 +224,7 @@
       <div class="row people">
         <div class="cell col-md-12">
           <span class="badge badge-info"></span>
-          <textarea id="context_people">WAITING TO LOAD DATA</textarea>
+          <div id="context_people" class="editor"></div>
         </div>
       </div>
     </div> <!-- /container -->
