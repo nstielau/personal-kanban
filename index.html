@@ -25,6 +25,7 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+    <!-- Javascript for WYSIWG -->
     <script src="js/bootstrap-wysiwyg.js"></script>
     <script src="js/jquery.hotkeys.js"></script>
 
@@ -80,8 +81,9 @@
             localStorage.setItem(el.id, el.value);
           }
         });
-        var currentColor = $('.navbar-brand')[0].style['color'];
+        var currentColor = $('.navbar-brand').css('color');
         $(".navbar-brand").animate({color: "#99ff99"}, 150 ).animate({color: currentColor}, 100);
+        $(".navbar-brand").css('color', currentColor) // force back to original, to prevent race
       });
     }
 
