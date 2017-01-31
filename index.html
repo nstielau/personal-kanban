@@ -107,10 +107,12 @@
         console.log("Loading state from localStorage");
         var elements = document.querySelectorAll('.editor');
         Array.prototype.forEach.call(elements, function(el, i){
-          if (el.tagName == 'DIV') {
-            el.innerHTML = localStorage.getItem(el.id);
-          } else {
-            el.value = localStorage.getItem(el.id);
+          if (localStorage.getItem(el.id)) {
+            if (el.tagName == 'DIV') {
+              el.innerHTML = localStorage.getItem(el.id);
+            } else {
+              el.value = localStorage.getItem(el.id);
+            }
           }
         });
       });
@@ -209,30 +211,50 @@
       <div class="row work">
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <div id="work_todo" class="editor todo">WAITING TO LOAD DATA</div>
+          <div id="work_todo" class="editor todo">
+<div>This is a swimlane.</div>
+<div>There are todo, doing, and done columns.</div>
+<div>I use thise one for my <b>work/career</b> world</div>
+          </div>
         </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="work_doing" class="editor doing">WAITING TO LOAD DATA</textarea>
+          <textarea id="work_doing" class="editor doing">
+Coordinate the rollout
+DOINGs are bigger, for focus
+          </textarea>
        </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="work_done" class="editor done">WAITING TO LOAD DATA</textarea>
+          <textarea id="work_done" class="editor done">
+accomplished are striken-through
+done are striken-through
+complete are striken-through
+resolved are striken-through</textarea>
         </div>
       </div>
       <!-- Example row of columns -->
       <div class="row home">
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <div id="home_todo" class="editor todo">WAITING TO LOAD DATA</div>
+          <div id="home_todo" class="editor todo">
+This swimlane is for <b>home</b> stuff
+<ul><li>Lists are supported</li><li>just 'tab' in!</li></ul>
+          </div>
         </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="home_doing" class="editor doing">WAITING TO LOAD DATA</textarea>
+          <textarea id="home_doing" class="editor doing">
+something in the home sphere
+shower loved ones with gifts
+          </textarea>
        </div>
         <div class="cell col-md-4">
           <span class="badge badge-info"></span>
-          <textarea id="home_done" class="editor done">WAITING TO LOAD DATA</textarea>
+          <textarea id="home_done" class="editor done">
+Count all your dones ==================>
+did it
+done it</textarea>
         </div>
       </div>
 
@@ -240,7 +262,18 @@
       <div class="row people">
         <div class="cell col-md-12">
           <span class="badge badge-info"></span>
-          <div id="context_people" class="editor"></div>
+          <div id="context_people" class="editor">
+I use this for people-based contextual todos:
+<div><b>Bob:</b> ask about pizza</div>
+<div><b>Jane:</b> ask about cookies</div>
+<div><b>hotkeys:</b>
+<ul>
+  <li>cmd-s to save state to LocalStroage</li>
+  <li>cmd-b to bold selected text</li>
+  <li>tab to indent/unindent list</li>
+</ul>
+</div>
+          </div>
         </div>
       </div>
     </div> <!-- /container -->
