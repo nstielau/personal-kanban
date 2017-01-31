@@ -9,3 +9,18 @@ flow for work, a kanban flow for home, and person-based context for
 tracking items related to specific people.
 
 [Try it out](https://nstielau.github.io/personal-kanban/)
+
+## Features
+
+* Persists to localStorage
+* Rich text editing (bold, lists)
+* Kanban specific styling to help focus on doing
+* Revision counter
+
+
+## TODO
+
+* Personal Kanban add ME lane
+* Evenly split rows by %
+* Dynamically add badges HTML
+* Gradients in Personal Kanban
