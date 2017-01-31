@@ -73,14 +73,28 @@
     function save() {
       withLocalStorageSupport(function(){
         console.log("Saving state to localStorage")
+
+        var dirty = false;
         var elements = document.querySelectorAll('.editor');
         Array.prototype.forEach.call(elements, function(el, i){
           if (el.tagName == 'DIV') {
-            localStorage.setItem(el.id, el.innerHTML);
+            value = el.innerHTML;
           } else {
-            localStorage.setItem(el.id, el.value);
+            value = el.value
+          }
+          if (value != localStorage.getItem(el.id)) {
+              localStorage.setItem(el.id, value);
+              dirty = true;
           }
         });
+
+        // Increment Revision
+        if (dirty == true) {
+          localStorage.setItem('revision', parseInt(localStorage.getItem('revision') || 0)+1);
+          $("#last-saved").text('r' + localStorage.getItem('revision'));
+        }
+
+        // Pulse Header
         var currentColor = $('.navbar-brand').css('color');
         $(".navbar-brand").animate({color: "#99ff99"}, 150 ).animate({color: currentColor}, 100);
         $(".navbar-brand").css('color', currentColor) // force back to original, to prevent race
