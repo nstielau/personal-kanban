@@ -63,7 +63,7 @@
     function withLocalStorageSupport(fn) {
       // Check browser support
       if (typeof(Storage) !== "undefined") {
-        fn()
+        return fn()
       } else {
         alert("No local storage");
       }
@@ -101,13 +101,26 @@
       });
     }
 
+    function deviceID() {
+      return withLocalStorageSupport(function(){
+        id = localStorage.getItem('deviceID');
+        if (id) {
+          return id;
+        }
+        id = Math.floor((1 + Math.random()) * 0x10000000000000).toString(16)
+        localStorage.setItem('deviceID', id);
+        return id;
+      });
+    }
+
     // Load notes
     function load() {
       withLocalStorageSupport(function() {
         console.log("Loading state from localStorage");
         var elements = document.querySelectorAll('.editor');
         Array.prototype.forEach.call(elements, function(el, i){
-          if (localStorage.getItem(el.id)) {
+          // Check that we have a real string in localStorage...
+          if (typeof localStorage.getItem(el.id) == 'string') {
             if (el.tagName == 'DIV') {
               el.innerHTML = localStorage.getItem(el.id);
             } else {
