@@ -54,7 +54,11 @@
     .container {width: 100%;}
     .cell {padding: 0px; margin: 0px;}
     .cell .badge {position: absolute; right: 0; margin: 2px;}
-    .navbar {margin-bottom: 0px; font-family: monospace;}
+    .navbar {
+      margin-bottom: 0px;
+      font-family: monospace;
+      background: url(http://hanksrepublic.com/wp-content/uploads/2017/05/tasty-tie-dye-wallpaper.jpg) 0px 300px;
+    }
     #last-saved {height: 30px;}
     </style>
 
@@ -96,7 +100,7 @@
 
         // Pulse Header
         var currentColor = $('.navbar-brand').css('color');
-        $(".navbar-brand").animate({color: "#99ff99"}, 150 ).animate({color: currentColor}, 100);
+        $(".navbar-brand").animate({color: "#000000"}, 150 ).animate({color: currentColor}, 100);
         $(".navbar-brand").css('color', currentColor) // force back to original, to prevent race
       });
     }
@@ -161,7 +165,6 @@
 
       // Save regularly
       setInterval(save, 10000);
-
 
       var elements = document.querySelectorAll('.cell');
       Array.prototype.forEach.call(elements, function(cell, i){
