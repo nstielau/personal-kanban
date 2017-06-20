@@ -63,6 +63,12 @@
     </style>
 
     <script>
+    // Move navbar background
+    function shiftNavbarBackground(event){
+      $( ".navbar").css('background-position-y', parseInt($( ".navbar").css('background-position-y')) + 1 + 'px');
+    }
+
+
     // helper function to gracefully handle lack of LocalStroage support
     function withLocalStorageSupport(fn) {
       // Check browser support
@@ -165,6 +171,9 @@
 
       // Save regularly
       setInterval(save, 10000);
+
+      // Fancy! move background on mouse Move
+      $('body').mousemove(shiftNavbarBackground);
 
       var elements = document.querySelectorAll('.cell');
       Array.prototype.forEach.call(elements, function(cell, i){
